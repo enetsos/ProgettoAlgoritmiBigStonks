@@ -45,24 +45,35 @@ struct nodo{
     struct nodo *next;
 };typedef struct nodo Nodo;
 
+double createNodoB(int B, int S){
+    return B/S;
+}
 
-Nodo *createPath(int N, int K, int B[MAXN][MAXK], int S[MAXN][MAXK], Nodo *prev)
-{
+double createNodoS(int B, int S){
+    return S*B;
+}
 
-    //TOFIX: non so come creare il path, non so creare il grafo 
 
-    //creao un nodo che ha il peso dell'elemento dell'array e il puntatore al nodo successivo che è il nodo che ho creato prima
-    //problema è che il nodo precedente non esiste ancora se inizio a creare il path
-    //il path è un array di nodi, quindi devo creare un array di nodi
-    //probabilmente non ha senso salvare il puntatore al nodo successivo, ma solo il peso
+void createPath(int N, int K, int B[MAXN][MAXK], int S[MAXN][MAXK], double path[nVertici(N, K)]){
+    int cont = 0;
+    for (i = 0; i < N-1; i++)
+    {
+        for (j = 0; j < K; j++)
+        {
+            free(S[i]);
+            
+            path[cont] = createNodoB(B[i][j], S[i][j]);
+            cont++;
+        }
+    }
+}
+
+void printPath(double path[nVertici(N, K)]){
+    for (i = 0; i < nVertici(N, K); i++)
+    {
+        printf("%f ", path[i]);
+    }
     
-
-    Nodo *nodo = malloc(sizeof(Nodo));
-    nodo->peso = prev->peso / prev->next->peso;
-    nodo->next = malloc(sizeof(Nodo));
-    nodo->next->peso = B[1][1];
-    
-    return nodo;
 }
 
 
@@ -84,6 +95,11 @@ int main()
     // insert your code here
     printMatrix(N, K, B, S);
 
+    printf("\n");
+
+    double path[nVertici(N, K)];
+    createPath(N, K, B, S, path);
+    printPath(path);
 
 
     printf("%d\n",42); // print your result
