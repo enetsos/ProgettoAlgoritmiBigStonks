@@ -12,7 +12,7 @@
 int N, K, i, j;                   // N->number of days, K->number of stocks
 int B[MAXN][MAXK], S[MAXN][MAXK]; // B->buy, S->sell
 
-int nVertici(int N, int K)
+int nArchi(int N, int K)
 {
     return N * 2 * K;
 }
@@ -47,7 +47,7 @@ typedef struct nodo Nodo;
 
 double createNodoB(int B, int S)
 {
-    return B / S;
+    return B * S;
 }
 
 double createNodoS(int B, int S)
@@ -55,21 +55,20 @@ double createNodoS(int B, int S)
     return S * B;
 }
 
-void createPath(int N, int K, int B[MAXN][MAXK], int S[MAXN][MAXK], double path[nVertici(N, K)])
+void createPath(int N, int K, int B[MAXN][MAXK], int S[MAXN][MAXK], double path[nArchi(N, K)])
 {
     int cont = 0;
-    for(int t = 0; t < N; t++)
-    {
-        for(int i = 1; i < N-1; i++)
+    for (int i = 0; i < N; i++)
+    {   
+        for (int j = i; j < N-1; j++)
         {
-            for(int j = 0; j < K; j++)
+            for(int k = 0; k < K; k++)
             {
-                path[cont] = createNodoS(B[t][j], S[i][j]);
+                path[cont] = createNodoB(B[i][k], S[i+1][k]);
                 cont++;
             }
         }
     }
-
 
     /*
 
@@ -80,11 +79,24 @@ void createPath(int N, int K, int B[MAXN][MAXK], int S[MAXN][MAXK], double path[
 
 
     */
+
+    for (int i = 1; i < N; i++)
+    {   
+        for (int j = i; j < N; j++)
+        {
+            for(int k = 0; k < K; k++)
+            {
+                path[cont] = createNodoS(S[i][j], B[i+1][k%K]);
+                cont++;
+            }
+        }
+    }
+
 }
 
-void printPath(double path[nVertici(N, K)])
+void printPath(double path[nArchi(N, K)])
 {
-    for (i = 0; i < nVertici(N, K); i++)
+    for (i = 0; i < nArchi(N, K); i++)
     {
         printf("%f ", path[i]);
         if ((i + 1) % 3 == 0)
@@ -114,7 +126,7 @@ int main()
 
     printf("\n");
 
-    double path[nVertici(N, K)];
+    double path[nArchi(N, K)];
     createPath(N, K, B, S, path);
     printPath(path);
 
