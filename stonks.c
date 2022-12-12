@@ -14,7 +14,7 @@ int B[MAXN][MAXK], S[MAXN][MAXK]; // B->buy, S->sell
 
 int nArchi(int N, int K)
 {
-    return N * 2 * K;
+    return 1000;
 }
 
 void printMatrix(int N, int K, int B[MAXN][MAXK], int S[MAXN][MAXK])
@@ -40,6 +40,7 @@ void printMatrix(int N, int K, int B[MAXN][MAXK], int S[MAXN][MAXK])
 
 struct nodo
 {
+    int id; // 0 buy, 1 sell
     double peso;
     struct nodo *next;
 };
@@ -58,13 +59,13 @@ double createNodoS(int B, int S)
 void createPath(int N, int K, int B[MAXN][MAXK], int S[MAXN][MAXK], double path[nArchi(N, K)])
 {
     int cont = 0;
-    for (int i = 0; i < N; i++)
-    {   
+    for (int i = 0; i < N-1; i++)
+    {
         for (int j = i; j < N-1; j++)
         {
             for(int k = 0; k < K; k++)
             {
-                path[cont] = createNodoB(B[i][k], S[i+1][k]);
+                path[cont] = createNodoB(B[i][k], S[j+1][k]);
                 cont++;
             }
         }
@@ -79,19 +80,23 @@ void createPath(int N, int K, int B[MAXN][MAXK], int S[MAXN][MAXK], double path[
 
 
     */
-
-    for (int i = 1; i < N; i++)
-    {   
+    for (int i = 1; i < N-1; i++)
+    {
         for (int j = i; j < N; j++)
         {
-            for(int k = 0; k < K; k++)
-            {
-                path[cont] = createNodoS(S[i][j], B[i+1][k%K]);
+            for (int k = 0; k < K; k++)
+            { 
+                if((k+j) == K){
+                    path[cont] = createNodoS(S[i][k], B[i][0]);
+                }
+                else if((k+j) > K)
+                    path[cont] = createNodoS(S[i][k], B[i][k+j-K]);
+                else
+                    path[cont] = createNodoS(S[i][k], B[i][k+j]);
                 cont++;
             }
         }
     }
-
 }
 
 void printPath(double path[nArchi(N, K)])
