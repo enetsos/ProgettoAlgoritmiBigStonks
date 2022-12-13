@@ -38,12 +38,6 @@ void printMatrix(int N, int K, int B[MAXN][MAXK], int S[MAXN][MAXK])
     }
 }
 
-struct nodo
-{
-    int id; // 0 buy, 1 sell
-    double peso[];
-};
-typedef struct nodo Nodo;
 
 double createNodoB(int B, int S)
 {
