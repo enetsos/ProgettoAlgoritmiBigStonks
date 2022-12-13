@@ -44,28 +44,23 @@ double createNodoB(int B, int S)
     return B * S;
 }
 
-double createNodoS(int B, int S)
+double createNodoS(int S, int B)
 {
-    return S * B;
-}
-
-void createNodo(int id, double peso[], Nodo nodo){
-    nodo.id = id;
-    for(int i = 0; i < K-1; i++)
-        nodo.peso[i] = peso[i];
+    return S / (double)B;
 }
 
 void createArchiB(int N, int K, int B[MAXN][MAXK], int S[MAXN][MAXK], double archiB[N][K])
 {
-    int cont = 0;
     for (int i = 0; i < N-1; i++)
     {
-        for (int j = i; j < N-1; j++)
+        for (int j = i; j < N; j++)
         {
             for(int k = 0; k < K; k++)
             {
-                archiB[i][k] = createNodoB(B[i][k], S[j+1][k]);
-                cont++;
+                if(i == 0)
+                    archiB[j][k] = 1 / createNodoB(B[i][k], S[j][k]);
+                else
+                    archiB[j][k] = createNodoB(B[i][k], S[j][k]);
             }
         }
     }
@@ -80,39 +75,53 @@ void createArchiS(int N, int K, int B[MAXN][MAXK], int S[MAXN][MAXK], double arc
             for (int k = 0; k < K; k++)
             { 
                 if((k+j) == K){
-                    archiS[i-1][k] = createNodoS(S[i][k], B[i][0]);
+                    archiS[j-1][k] = createNodoS(S[i][k], B[i][0]);
                 }
                 else if((k+j) > K)
-                    archiS[i-1][k] = createNodoS(S[i][k], B[i][k+j-K]);
+                    archiS[j-1][k] = createNodoS(S[i][k], B[i][k+j]);
                 else
-                    archiS[i-1][k] = createNodoS(S[i][k], B[i][k+j]);
+                    archiS[j-1][k] = createNodoS(S[i][k], B[i][k+j]);
                 cont++;
             }
         }
     }
 }
 
-void lineeFinali(int N, int K, int B[MAXN][MAXK], int S[MAXN][MAXK], double archiB[nArchi(N, K)], double archiS[nArchi(N, K)]){
-    for (i = 0; i < nArchi(N, K); i++)
-    {
-        if ((i + 1) % 3 == 0)
-        {
-            printf("\n");
-        }
+void createPath(int N, int K, double archiB[N][K], double archiS[N][K],int B[MAXN][MAXK],int S[MAXN][MAXK], double path[15]){
+    int cont = 0;
+    for(int i = 0; i < N; i++){
+        path[cont] = (double) 1 / B[0][i];
+        path[cont] *= archiS[0][i];
+        if((i+1) == K)
+            path[cont] *= B[N-1][0];
+        else
+            path[cont] *= B[N-1][i+1];
+        cont++;
+    }
+
+    for(int i = 0; i < N; i++){
+        path[cont] = (double) 1 / B[0][i];
+        path[cont] *= archiS[0][i];
+        if((i-1) == 0)
+            path[cont] *= B[N-1][K-1];
+        else
+            path[cont] *= B[N-1][i-1];
+        cont++;
+    }
+
+    for(int i = 0; i < N; i++){
+        path[cont] = (double) 1 / B[0][i];
+        path[cont] *= S[2][i];
+        cont++;
     }
 }
 
-void printArchiB(double path[nArchi(N, K)])
-{
-    for (i = 0; i < nArchi(N, K); i++)
-    {
+void printPath(double path[15]){
+    for(int i = 0; i < 15; i++){
         printf("%f ", path[i]);
-        if ((i + 1) % 3 == 0)
-        {
-            printf("\n");
-        }
     }
 }
+
 
 void printArchi(double archi[N][K])
 {
@@ -126,6 +135,15 @@ void printArchi(double archi[N][K])
     }
 }
 
+
+double maxOfPath(double path[15]){
+    double max = path[0];
+    for(int i = 0; i < 15; i++){
+        if(path[i] > max)
+            max = path[i];
+    }
+    return max;
+}
 int main()
 {
     //  uncomment the following lines if you want to read/write from files
@@ -154,9 +172,15 @@ int main()
     printf("\n");
     printf("\n");
     printArchi(archiS);
+
+    double path[15];
+    createPath(N, K, archiB, archiS,B,S, path);
+    printf("\n");
+    printPath(path);
     
 
-    printf("%d\n", 42); // print your result
+    printf("\n");
+    printf("%f", maxOfPath(path)); // print your result
 
     return 0;
 }
