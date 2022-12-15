@@ -136,7 +136,7 @@ void printArchi(double archi[N][K])
         printf("\n");
     }
 }
-
+-
 double maxOfPath(double path[15])
 {
     double max = path[0];
