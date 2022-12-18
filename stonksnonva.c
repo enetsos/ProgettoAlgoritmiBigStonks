@@ -185,8 +185,8 @@ void matrixZero(int N, int K, double archiB[N][K], double archiS[N][K])
 int main()
 {
     //  uncomment the following lines if you want to read/write from files
-    freopen("input0.txt", "r", stdin);
-    freopen("output0.txt", "w", stdout);
+    freopen("input1.txt", "r", stdin);
+    freopen("output1.txt", "w", stdout);
 
     assert(2 == scanf("%d%d", &N, &K));
 
@@ -199,9 +199,9 @@ int main()
     }
 
     // insert your code here
-    // printMatrix(N, K, B, S);
+    printMatrix(N, K, B, S);
 
-    // printf("\n");
+    printf("\n");
 
     double archiB[N][K];
     double archiS[N][K];
@@ -217,18 +217,17 @@ int main()
     }
 
     createArchiS(N, K, B, S, archiS);
-    // printArchi(archiB);
-    // printf("\n");
-    // printf("\n");
-    // printArchi(archiS);
+    printArchi(archiB);
+    printf("\n");
+    printf("\n");
+    printArchi(archiS);
 
     double path[15] = {0};
     createPath(N, K, archiB, archiS, B, S, path);
-    // printf("\n");
-    // printPath(path);
-
-    // printf("\n");
-    // printf("\n");
+    printf("\n");
+    printPath(path);
+    printf("\n");
+    printf("\n");
     double max = maxOfTwo(maxOfPath(path), maxArchiB(archiB));
     printf("%f", max); // print your result
 
