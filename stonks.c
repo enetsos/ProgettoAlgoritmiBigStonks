@@ -21,6 +21,48 @@ int main()
 
     for (int i = 0; i < N; i++)
     {
+        path[cont] = (double)1 / B[0][i];
+        path[cont] *= S[2][i];
+        cont++;
+    }
+}
+
+void printPath(double path[15])
+{
+    for (int i = 0; i < 15; i++)
+    {
+        printf("%f ", path[i]);
+    }
+}
+
+void printArchi(double archi[N][K])
+{
+    for (i = 0; i < N; i++)
+    {
+        for (j = 0; j < K; j++)
+        {
+            printf("%f ", archi[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+double maxOfPath(double path[15])
+{
+    double max = path[0];
+    for (int i = 0; i < 15; i++)
+    {
+        if (path[i] > max)
+            max = path[i];
+    }
+    return max;
+}
+
+double maxArchiB(double archiB[N][K])
+{
+    double max = archiB[0][0];
+    for (int i = 0; i < N; i++)
+    {
         for (int j = 0; j < K; j++)
         {
             assert(2 == scanf("%d%d", &buy[i][j], &sell[i][j]));

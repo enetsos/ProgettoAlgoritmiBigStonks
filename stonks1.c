@@ -1,61 +1,102 @@
 // NOTE: it is recommended to use this even if you don't understand the following code.
-
+// ciaooooo
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "stonks.c"
 
-int nVertici(int N, int K){
-    return N*2*K;
-}
+// constraints
+#define MAXN 3000
+#define MAXK 3000
 
-struct nodo{
-    int id;
-    int peso;
-    struct nodo *next;
-};typedef struct nodo Nodo;
+// input data
+int N, K, i, j;                   // N->number of days, K->number of stocks
+int B[MAXN][MAXK], S[MAXN][MAXK]; // B->buy, S->sell
+double C[MAXN];
 
-
-Nodo *genGraphByMatrixOfVertex(int N, int K, int B[MAXN][MAXK], int S[MAXN][MAXK]){
-    int n = nVertici(N, K);
-    Nodo *graph[n];
-    int i, j, k;
-    for(i=0; i<n; i++){
-        graph[i] = NULL;
-    }
-    for(i=0; i<N; i++){
-        for(j=0; j<K; j++){
-            for(k=0; k<K; k++){
-                if(j!=k){
-                    Nodo *new = malloc(sizeof(Nodo));
-                    new->id = i*K+k;
-                    new->peso = B[i][j]-S[i][k];
-                    new->next = graph[i*K+j];
-                    graph[i*K+j] = new;
-                }
-            }
+void printMatrix(int N, int K, int B[MAXN][MAXK], int S[MAXN][MAXK])
+{
+    for (i = 0; i < N; i++)
+    {
+        for (j = 0; j < K; j++)
+        {
+            printf("%d ", B[i][j]);
         }
+        printf("\n");
     }
-    return graph;
-}
 
-void printGraph(Nodo *graph, int N, int K){
-    int n = nVertici(N, K);
-    for(int i = 0; i < n; i++){
-        printf("%d: ", graph[i].id);
-        Nodo *tmp = graph[i].next;
-        while(tmp != NULL){
-            printf("%d ", tmp->id);
-            tmp = tmp->next;
+    printf("\n");
+    for (i = 0; i < N; i++)
+    {
+        for (j = 0; j < K; j++)
+        {
+            printf("%d ", S[i][j]);
         }
         printf("\n");
     }
 }
 
 
-int main() {
+void stampaC(int N)
+{
+    for(int i = 0; i < N; i++)
+    {
+        printf("%f ", C[i]);
+    }
+    printf("\n");
+}
 
-printGraph(genGraphByMatrixOfVertex(3, 3, B, S), 3, 3);
+int max(double a, double b)
+{
+    if(a > b)
+    {
+        return a;
+    }
+    else
+    {
+        return b;
+    }
+}
+
+int main()
+{
+    //  uncomment the following lines if you want to read/write from files
+    freopen("input1.txt", "r", stdin);
+    freopen("output1.txt", "w", stdout);
+
+    assert(2 == scanf("%d%d", &N, &K));
+
+    for (i = 0; i < N; i++)
+    {
+        for (j = 0; j < K; j++)
+        {
+            assert(2 == scanf("%d%d", &B[i][j], &S[i][j]));
+        }
+    }
+
+    C[0] = 1;
+    for(int daySell = 1; daySell < N; daySell++)
+    {
+        for(int dayBuy = 0; dayBuy < daySell; dayBuy++)
+        {
+            double gain = 0.0;
+
+            for(int w = 0; w < K; w++)
+            {
+                gain = max(gain, (double)(S[daySell][w] - B[dayBuy][w]) / (double)B[dayBuy][w]);
+                
+            }
+            if(gain > 0)
+            {
+                C[daySell] = max(C[daySell], C[dayBuy] * (1 + gain));
+            }
+        }
+    }
+
+    printMatrix(N, K, B, S);
+
+    printf("\n");
+
+    stampaC(N);
 
 
     return 0;
